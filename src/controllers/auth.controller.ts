@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import * as Yup from "yup";
 
 import UserModel from "../models/user.model";
+import { encrypt } from "../utils/encryption";
 
 type TRegister = {
     fullName: string;
@@ -9,6 +10,11 @@ type TRegister = {
     email: string;
     password: string;
     confirmPassword: string;
+};
+
+type TLogin = {
+    identifier: string;   // username or email
+    password: string;
 };
 
 const registerValidateSchema = Yup.object({
@@ -49,6 +55,49 @@ export default {
             message: "Success registration!",
             data: result,
         });
+      } catch (error) {
+        const err = error as unknown as Error;
+        res.status(400).json({
+            message: err.message,
+            data: null,
+        })
+      }
+    },
+
+    async login(req: Request, res: Response) {
+      const { identifier, password } = req.body;
+
+      try {
+        // Get user by identifier (username or email)
+        const userByIdentifier = await UserModel.findOne({
+          $or: [
+            { username: identifier },
+            { email: identifier },
+          ],
+        });
+
+        if (!userByIdentifier) {
+          return res.status(403).json({
+            message: "User not found!",
+            data: null,
+          });
+        }
+
+        // Validate password
+        const isPasswordValid: boolean = encrypt(password) === userByIdentifier.password;
+        
+        if (!isPasswordValid) {
+          return res.status(403).json({
+            message: "Invalid password!",
+            data: null,
+          });
+        }
+
+        res.status(200).json({
+          message: "Success login!",
+          data: userByIdentifier,
+        });
+
       } catch (error) {
         const err = error as unknown as Error;
         res.status(400).json({
