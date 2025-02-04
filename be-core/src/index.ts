@@ -19,6 +19,14 @@ async function init() {
         // sehingga Anda tidak perlu menginstal bodyParser secara terpisah. 
         // Anda bisa langsung menggunakan express.json() dan express.urlencoded()
 
+        // Add checking endpoing
+        app.use("/", (req, res) => {
+            res.status(200).json({
+                message: "Server is running!",
+                data: null,
+            });
+        });
+
         app.use("/api", router);
 
         app.listen(PORT, () => {
