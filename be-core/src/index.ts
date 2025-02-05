@@ -1,9 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 import router from "./routes/api";
-
 import db from "./utils/database";
+import docs from "./docs/route";
 
 const app = express();
 const PORT = 3000;
@@ -13,6 +14,7 @@ async function init() {
         const result = await db();
         console.log("Database status: ", result);
         
+        app.use(cors());
         app.use(bodyParser.json());
         // Notes From DeepSeek AI
         // Mulai dari versi Express 4.16.0, bodyParser sudah diintegrasikan ke dalam Express.js, 
@@ -28,6 +30,8 @@ async function init() {
         });
 
         app.use("/api", router);
+
+        docs(app);
 
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`)
