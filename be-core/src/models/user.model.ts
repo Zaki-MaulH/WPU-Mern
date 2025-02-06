@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
-import {encrypt} from "../utils/encryption";
+import { encrypt } from "../utils/encryption";
+
+import { renderMailHtml, sendMail } from "../utils/mail/mail";
+import { CLIENT_HOST, EMAIL_SMTP_USER } from "../utils/env";
 
 export interface User {
     fullName: string;
@@ -10,6 +13,7 @@ export interface User {
     profilePicture: string;
     isActive: boolean;
     activationCode: string;
+    createdAt?: string;
 }
 
 const Schema = mongoose.Schema;
@@ -59,6 +63,35 @@ userSchema.pre("save", function (next) {
     user.password = encrypt(user.password);
     next();
 })
+
+// Middleware to send email for activation account after saving
+userSchema.post("save", async function (doc, next) {
+    try {
+        const user = doc;
+
+        console.log("Send Email to: ", user.email);
+
+        const contentMail = await renderMailHtml("registration-success.ejs", {
+            username: user.username,
+            fullName: user.fullName,
+            email: user.email,
+            createAt: user.createdAt,
+            activationLink: `${CLIENT_HOST}/auth/activation?code=${user.activationCode}`,
+        });
+
+        await sendMail ({
+            from: EMAIL_SMTP_USER,
+            to: user.email,
+            subject: "Aktifasi Akun Anda",
+            html: contentMail,
+        });
+    } catch (error) {
+        console.log("Error: ", error);
+    } finally {
+        next();
+    }
+    
+});
 
 // Middleware to delete password before sending response
 userSchema.methods.toJSON = function () {
