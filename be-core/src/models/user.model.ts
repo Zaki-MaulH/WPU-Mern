@@ -57,10 +57,12 @@ const userSchema = new Schema<User>({
     timestamps: true,
 });
 
-// Middleware to hash password before saving
+// Middleware to hash password before saving and add activation code
 userSchema.pre("save", function (next) {
     const user = this;
     user.password = encrypt(user.password);
+    user.activationCode = encrypt(user.id);
+    
     next();
 })
 

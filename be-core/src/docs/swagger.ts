@@ -25,8 +25,18 @@ const doc = {
         },
         schemas: {
             LoginRequest: {
-                identifier: "Zaki MH",
-                password: "12345",
+                identifier: "TestUserName",
+                password: "Test123456",
+            },
+            RegisterRequest: {
+                fullName: "Your Name",
+                username: "TestUserName",
+                email: "test@mail.com",
+                password: "Test123456",
+                confirmPassword: "Test123456",
+            },
+            ActivationRequest: {
+                code: "123456",
             }
         }
     }
