@@ -2,7 +2,7 @@ import { Button } from "@nextui-org/react";
 import Image from "next/image"
 import { useRouter } from "next/router";
 
-const registerSuccess = () => {
+const RegisterSuccess = () => {
     const router = useRouter();
 
     return (
@@ -41,4 +41,4 @@ const registerSuccess = () => {
     )
 };
 
-export default registerSuccess;
+export default RegisterSuccess;

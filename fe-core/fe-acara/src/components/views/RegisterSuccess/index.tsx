@@ -1,3 +1,3 @@
-import registerSuccess from "./registerSuccess";
+import RegisterSuccess from "./registerSuccess";
 
-export default registerSuccess;
+export default RegisterSuccess;

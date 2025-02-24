@@ -8,7 +8,7 @@ import { Controller } from "react-hook-form";
 import useRegister from "./useRegister";
 import { cn } from "@/utils/cn";
 
-const register = () => {
+const Register = () => {
     const {
         visiblePassword,
         handleVisiblePassword,
@@ -170,4 +170,4 @@ const register = () => {
     );
 };
 
-export default register;
+export default Register;
