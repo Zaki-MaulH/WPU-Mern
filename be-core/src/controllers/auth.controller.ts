@@ -25,7 +25,7 @@ const registerValidateSchema = Yup.object({
     email: Yup.string().required(),
     password: Yup.string()
       .required()
-      .min(6, "Password must be at least 6 characters.")
+      .min(8, "Password must be at least 8 characters.")
       .test(
         "at-least-one-uppercase-letter", 
         "Password must contain at least one uppercase letter.",
