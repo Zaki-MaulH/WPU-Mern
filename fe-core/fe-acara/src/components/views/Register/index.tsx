@@ -1,3 +1,3 @@
-import Register from "./register";
+import register from "./register";
 
-export default Register;
+export default register;
